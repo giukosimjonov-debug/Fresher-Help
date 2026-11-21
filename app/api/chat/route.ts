@@ -3,6 +3,40 @@ import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
 
+function cleanPlainText(text: string): string {
+  const withoutBreaks = text
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "");
+
+  const lines = withoutBreaks
+    .replace(/\*\*\*/g, "")
+    .replace(/\*\*/g, "")
+    .replace(/###\s*/g, "")
+    .replace(/#{1,6}\s*/g, "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  const cleaned: string[] = [];
+  for (const line of lines) {
+    if (/^\|\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?$/.test(line)) continue;
+
+    if (/^\|.*\|$/.test(line)) {
+      const cells = line
+        .slice(1, -1)
+        .split("|")
+        .map((cell) => cell.trim())
+        .filter(Boolean);
+      if (cells.length > 0) cleaned.push(cells.join(" — "));
+      continue;
+    }
+
+    cleaned.push(line.replace(/\*/g, "").trim());
+  }
+
+  return cleaned.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+
 export async function POST(req: Request) {
   try {
     const apiKey = process.env.GROQ_API_KEY;
@@ -66,7 +100,8 @@ ${knowledgeBase}
 
 Rules:
 1. When the user pastes a Hungarian email/letter, asks for a document checklist, or asks for an action plan, ALWAYS call the "add_tasks" tool to extract concrete actionable tasks AND provide a clear English translation/explanation in "reply_message".
-2. For general questions (like DKV tram/bus routes), answer clearly and concisely.`,
+2. For general questions (like DKV tram/bus routes), answer clearly and concisely.
+3. Output plain text only. NEVER use Markdown bold (**), asterisks (*), Markdown tables (|---|), hashtags (#), or HTML tags like <br>. Use clean numbered lines (1., 2., 3.) or bullet points (•) separated by newlines.`,
         },
         {
           role: "user",
@@ -119,15 +154,19 @@ Rules:
       const parsed = JSON.parse(toolCall.function.arguments);
       return NextResponse.json({
         reply:
-          parsed.reply_message ||
-          choice?.content ||
-          "Tasks added to your Live Student Action Plan!",
+          cleanPlainText(
+            parsed.reply_message ||
+              choice?.content ||
+              "Tasks added to your Live Student Action Plan!",
+          ),
         tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
       });
     }
 
     return NextResponse.json({
-      reply: choice?.content || "How can I help you in Debrecen today?",
+      reply: cleanPlainText(
+        choice?.content || "How can I help you in Debrecen today?",
+      ),
       tasks: [],
     });
   } catch (err: unknown) {
