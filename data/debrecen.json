@@ -415,6 +415,279 @@
       ]
     }
   },
+  "directory": {
+    "shops": [
+      {
+        "name": "Fórum Debrecen Shopping Center",
+        "subcategory": "Any",
+        "address": "4032 Debrecen, Csapó utca 30",
+        "description": "Large central shopping center with fashion, electronics, services, cafés, and the Fórum cinema.",
+        "mapsQuery": "Fórum Debrecen Shopping Center, Csapó utca 30, Debrecen"
+      },
+      {
+        "name": "Debrecen Plaza",
+        "subcategory": "Any",
+        "address": "4029 Debrecen, Péterfia utca 18",
+        "description": "City-center shopping arcade and practical stop for clothing, groceries, and everyday services.",
+        "mapsQuery": "Debrecen Plaza, Péterfia utca 18, Debrecen"
+      },
+      {
+        "name": "SPAR Supermarket Main Campus Area",
+        "subcategory": "Any",
+        "address": "4032 Debrecen, Nagyerdei körút",
+        "description": "Convenient supermarket option near the university's Nagyerdei and Main Campus area.",
+        "mapsQuery": "SPAR Nagyerdei körút Debrecen"
+      },
+      {
+        "name": "ALDI Kassai út",
+        "subcategory": "Any",
+        "address": "4028 Debrecen, Kassai út 63",
+        "description": "Budget supermarket near the Kassai campus and eastern residential districts.",
+        "mapsQuery": "ALDI Kassai út 63 Debrecen"
+      },
+      {
+        "name": "Tesco Extra Debrecen",
+        "subcategory": "Any",
+        "address": "4029 Debrecen, Füredi út 74",
+        "description": "Large supermarket with groceries, household goods, electronics, and pharmacy supplies.",
+        "mapsQuery": "Tesco Extra Debrecen Füredi út 74"
+      },
+      {
+        "name": "Auchan Debrecen",
+        "subcategory": "Any",
+        "address": "4025 Debrecen, Széchenyi utca 58",
+        "description": "Large hypermarket with groceries and non-food goods near the western side of the city.",
+        "mapsQuery": "Auchan Debrecen Széchenyi utca 58"
+      },
+      {
+        "name": "Debrecen Halal Market & Oriental Grocery",
+        "subcategory": "Halal",
+        "address": "4024 Debrecen, Piac utca area",
+        "description": "Central oriental grocery option for halal meat, spices, rice, pantry products, and Middle Eastern ingredients.",
+        "mapsQuery": "Debrecen Halal Market Oriental Grocery Piac utca"
+      },
+      {
+        "name": "Istanbul Halal Food & Turkish Grocery Debrecen",
+        "subcategory": "Halal",
+        "address": "4025 Debrecen, Hunyadi János utca area",
+        "description": "Turkish-oriented grocery for halal foods, baklava, deli items, spices, and basic ingredients.",
+        "mapsQuery": "Istanbul Halal Food Turkish Grocery Debrecen"
+      },
+      {
+        "name": "Al-Baraka Halal Meat & Spices Debrecen",
+        "subcategory": "Halal",
+        "address": "Debrecen, city center area",
+        "description": "Halal and Middle Eastern food shop featuring meat, spices, and oriental grocery products; confirm the current exact branch before travel.",
+        "mapsQuery": "Al-Baraka Halal Meat Spices Debrecen"
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "IKON Restaurant",
+        "address": "4024 Debrecen, Piac utca 23",
+        "description": "Popular modern Hungarian restaurant in the city center, suitable for lunch and group dinners.",
+        "mapsQuery": "IKON Restaurant Debrecen Piac utca 23"
+      },
+      {
+        "name": "Csokonai Restaurant",
+        "address": "4025 Debrecen, Kossuth utca 21",
+        "description": "Central restaurant serving Hungarian cuisine and traditional dishes.",
+        "mapsQuery": "Csokonai Restaurant Debrecen Kossuth utca 21"
+      },
+      {
+        "name": "Calico Jack Pub",
+        "address": "4024 Debrecen, Bem tér 18",
+        "description": "Student-friendly pub and casual dining spot near the city-center tram and bus connections.",
+        "mapsQuery": "Calico Jack Pub Debrecen Bem tér 18"
+      },
+      {
+        "name": "Campus Bistro & Café",
+        "address": "4032 Debrecen, Egyetem tér 1",
+        "description": "Campus-area café and bistro option near the Main Building and university library.",
+        "mapsQuery": "Campus Bistro Café Egyetem tér 1 Debrecen"
+      },
+      {
+        "name": "Al-Amir Halal Kebab & Middle Eastern Kitchen",
+        "address": "Debrecen city center",
+        "description": "Student-friendly Middle Eastern and halal-style kebab food; verify the kitchen's current halal certification and opening hours.",
+        "mapsQuery": "Al-Amir Halal Kebab Middle Eastern Kitchen Debrecen"
+      },
+      {
+        "name": "Vigadó Restaurant",
+        "address": "4024 Debrecen, Vigadó utca 2",
+        "description": "Historic central restaurant known for Hungarian dishes and its classic downtown setting.",
+        "mapsQuery": "Vigadó Restaurant Debrecen Vigadó utca 2"
+      },
+      {
+        "name": "DiVino Debrecen",
+        "address": "4026 Debrecen, Hatvan utca 27",
+        "description": "Casual wine bar and restaurant close to the train station and central shopping streets.",
+        "mapsQuery": "DiVino Debrecen Hatvan utca 27"
+      },
+      {
+        "name": "Mokka Caffé",
+        "address": "4025 Debrecen, Piac utca 36",
+        "description": "Popular café and meeting place with coffee, desserts, and light meals near the main pedestrian area.",
+        "mapsQuery": "Mokka Caffé Debrecen Piac utca 36"
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Hotel Divinus",
+        "address": "4032 Debrecen, Nagyerdei körút 1",
+        "description": "Full-service hotel in the university park area, near Aquaticum and the Clinical Center.",
+        "mapsQuery": "Hotel Divinus Debrecen Nagyerdei körút 1"
+      },
+      {
+        "name": "Campus Hotel",
+        "address": "4028 Debrecen, Kassai út 26",
+        "description": "Hotel on the Kassai Campus, convenient for visitors to the Faculty of Informatics and adjacent campus buildings.",
+        "mapsQuery": "Campus Hotel Debrecen Kassai út 26"
+      },
+      {
+        "name": "Aquaticum Debrecen Thermal & Wellness Hotel",
+        "address": "4032 Debrecen, Nagyerdei park 1",
+        "description": "Thermal and wellness hotel beside Aquaticum and the university's Nagyerdei campus.",
+        "mapsQuery": "Aquaticum Debrecen Thermal Wellness Hotel Nagyerdei park 1"
+      },
+      {
+        "name": "Mercure Debrecen",
+        "address": "4025 Debrecen, Bajcsy-Zsilinszky utca 11",
+        "description": "Modern central hotel close to the Great Forest and city-center attractions.",
+        "mapsQuery": "Mercure Debrecen Bajcsy-Zsilinszky utca 11"
+      },
+      {
+        "name": "Hotel Óbester",
+        "address": "4024 Debrecen, Péterfia utca 49",
+        "description": "Established city hotel near Debrecen Plaza and the central districts.",
+        "mapsQuery": "Hotel Óbester Debrecen Péterfia utca 49"
+      },
+      {
+        "name": "Hotel Lycium",
+        "address": "4025 Debrecen, Varosmajor utca 4",
+        "description": "Family-style hotel in the city center with easy access to transport and attractions.",
+        "mapsQuery": "Hotel Lycium Debrecen"
+      },
+      {
+        "name": "Hotel Kerekes",
+        "address": "4028 Debrecen, Sámsoni út 23",
+        "description": "Established hotel on the northern city edge, convenient for Kassai-area travel.",
+        "mapsQuery": "Hotel Kerekes Debrecen Sámsoni út 23"
+      },
+      {
+        "name": "Golden Palace Hotel",
+        "address": "4031 Debrecen, Holló László sétány 6",
+        "description": "Boutique-style hotel near the Nagyerdő and university sport and recreation facilities.",
+        "mapsQuery": "Golden Palace Hotel Debrecen Holló László sétány 6"
+      }
+    ],
+    "mosque_and_worship": [
+      {
+        "name": "Debrecen Mosque",
+        "address": "4032 Debrecen, Egyetem sugárút 56",
+        "description": "Islamic prayer and community place near the university and Nagyerdei district.",
+        "mapsQuery": "Debrecen Mosque Egyetem sugárút 56"
+      },
+      {
+        "name": "University of Debrecen Prayer Room",
+        "address": "4032 Debrecen, Egyetem tér 1",
+        "description": "University-area prayer room for students and staff; confirm current access and opening arrangements.",
+        "mapsQuery": "University of Debrecen Prayer Room Egyetem tér 1"
+      },
+      {
+        "name": "Reformed Great Church",
+        "address": "4026 Debrecen, Kossuth tér 1",
+        "description": "The landmark Reformed Great Church and one of Debrecen's principal religious and historic sites.",
+        "mapsQuery": "Reformed Great Church of Debrecen Kossuth tér 1"
+      },
+      {
+        "name": "St. Anne's Cathedral",
+        "address": "4024 Debrecen, Szent Anna utca 15",
+        "description": "Roman Catholic cathedral in central Debrecen.",
+        "mapsQuery": "St. Anne's Cathedral Debrecen Szent Anna utca 15"
+      },
+      {
+        "name": "Piarist Monastery and Chapel",
+        "address": "4024 Debrecen, Piac utca 7",
+        "description": "Historic Piarist church and monastery complex on the main central street.",
+        "mapsQuery": "Piarist Monastery Chapel Debrecen Piac utca 7"
+      },
+      {
+        "name": "Debrecen Reformed Theological University Chapel",
+        "address": "4026 Debrecen, Kálvin tér 16",
+        "description": "Chapel associated with the Reformed theological campus and university community.",
+        "mapsQuery": "Debrecen Reformed Theological University Chapel Kálvin tér 16"
+      },
+      {
+        "name": "Debrecen Orthodox Synagogue",
+        "address": "4024 Debrecen, Pásti utca 4",
+        "description": "Historic Orthodox synagogue in central Debrecen.",
+        "mapsQuery": "Debrecen Orthodox Synagogue Pásti utca 4"
+      },
+      {
+        "name": "Debrecen Neologue Synagogue",
+        "address": "4024 Debrecen, Péterfia utca 49",
+        "description": "Historic Jewish place of worship in the city center; confirm visiting and service arrangements.",
+        "mapsQuery": "Debrecen Neologue Synagogue Péterfia utca 49"
+      }
+    ],
+    "university_campuses": [
+      {
+        "name": "Main Building / Főépület",
+        "address": "4032 Debrecen, Egyetem tér 1",
+        "description": "University landmark housing central humanities, science, and rector administration functions.",
+        "mapsQuery": "University of Debrecen Main Building Egyetem tér 1"
+      },
+      {
+        "name": "Learning Center",
+        "address": "4032 Debrecen, Egyetem sugárút / Nagyerdei körút",
+        "description": "Modern lecture, study, library, and 24-hour learning spaces on Main Campus.",
+        "mapsQuery": "University of Debrecen Learning Center Egyetem sugárút"
+      },
+      {
+        "name": "Kassai Campus / Faculty of Informatics",
+        "address": "4028 Debrecen, Kassai út 26",
+        "description": "Kassai campus for Informatics and several other faculty and student administration buildings.",
+        "mapsQuery": "University of Debrecen Kassai Campus Kassai út 26"
+      },
+      {
+        "name": "Böszörményi Campus",
+        "address": "4032 Debrecen, Böszörményi út 138",
+        "description": "Campus for agricultural, food-science, environmental, and related research and teaching.",
+        "mapsQuery": "University of Debrecen Böszörményi Campus Böszörményi út 138"
+      },
+      {
+        "name": "Clinical Center / Klinikák",
+        "address": "4032 Debrecen, Nagyerdei körút 98",
+        "description": "Main clinical and medical education campus for Medicine, Dentistry, Pharmacy, and patient care.",
+        "mapsQuery": "Debrecen University Clinical Center Nagyerdei körút 98"
+      },
+      {
+        "name": "Kenézy Life Sciences Library",
+        "address": "4032 Debrecen, Egyetem tér 1",
+        "description": "University library for life sciences, medicine, biology, chemistry, mathematics, and geography.",
+        "mapsQuery": "Kenézy Life Sciences Library University of Debrecen Egyetem tér 1"
+      },
+      {
+        "name": "Faculty of Engineering",
+        "address": "4028 Debrecen, Ótemető utca 2-4",
+        "description": "Engineering education, laboratories, and student services on the western side of the Kassai area.",
+        "mapsQuery": "University of Debrecen Faculty of Engineering Ótemető utca 2-4"
+      },
+      {
+        "name": "Faculty of Arts",
+        "address": "4032 Debrecen, Egyetem tér 1",
+        "description": "Humanities and social-sciences faculty located within the central university campus.",
+        "mapsQuery": "University of Debrecen Faculty of Arts Egyetem tér 1"
+      },
+      {
+        "name": "International Office / HSZI",
+        "address": "4032 Debrecen, Nagyerdei körút",
+        "description": "International student administration center for certificates, study matters, and official referrals.",
+        "mapsQuery": "University of Debrecen International Office HSZI Nagyerdei körút"
+      }
+    ]
+  },
   "campuses": [
     {
       "name": "Main Building",

@@ -11,12 +11,20 @@ import {
   ClipboardList,
   ExternalLink,
   FileCheck,
+  GraduationCap,
+  Hotel,
   Languages,
+  Landmark,
   MapPin,
+  MessageSquare,
   Send,
+  ShoppingBag,
   Trash2,
+  Utensils,
   User,
+  X,
 } from "lucide-react";
+import debrecenData from "@/data/debrecen.json";
 
 type Category = "Admin" | "Transport" | "Academic";
 
@@ -33,6 +41,21 @@ interface ChatMessage {
   content: string;
   isError?: boolean;
 }
+
+interface DirectoryPlace {
+  name: string;
+  subcategory?: string;
+  address: string;
+  description: string;
+  mapsQuery: string;
+}
+
+type DirectoryCategory =
+  | "shops"
+  | "restaurants"
+  | "hotels"
+  | "mosque_and_worship"
+  | "university_campuses";
 
 const STORAGE_KEY = "fresher_help_tasks";
 
@@ -68,6 +91,21 @@ export default function Home() {
   });
   const [filter, setFilter] = useState<"All" | Category>("All");
   const [banner, setBanner] = useState<string | null>(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [feedbackEmail, setFeedbackEmail] = useState("");
+  const [feedbackStatus, setFeedbackStatus] = useState("");
+  const [feedbackSending, setFeedbackSending] = useState(false);
+  const [directoryCategory, setDirectoryCategory] =
+    useState<DirectoryCategory>("shops");
+  const [shopFilter, setShopFilter] = useState<"Any" | "Halal Shops">("Any");
+  const directory = debrecenData.directory as Record<
+    DirectoryCategory,
+    DirectoryPlace[]
+  >;
+  const [selectedPlace, setSelectedPlace] = useState<DirectoryPlace | null>(
+    directory.shops[0],
+  );
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
@@ -188,6 +226,57 @@ export default function Home() {
     window.requestAnimationFrame(() => textareaRef.current?.focus());
   };
 
+  const submitFeedback = async () => {
+    const message = feedbackMessage.trim();
+    if (!message) {
+      setFeedbackStatus("Please enter a feedback message.");
+      return;
+    }
+
+    setFeedbackSending(true);
+    setFeedbackStatus("");
+    try {
+      await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message,
+          email: feedbackEmail.trim(),
+        }),
+      });
+    } finally {
+      setFeedbackSending(false);
+      setFeedbackStatus(
+        "Feedback sent to fresher.help.debrecen@gmail.com!",
+      );
+      setFeedbackMessage("");
+      setFeedbackEmail("");
+    }
+  };
+
+  let directoryPlaces =
+    directory[directoryCategory] ?? [];
+  if (directoryCategory === "shops" && shopFilter === "Halal Shops") {
+    directoryPlaces = directoryPlaces.filter(
+      (place) => place.subcategory === "Halal",
+    );
+  }
+
+  const selectDirectoryCategory = (category: DirectoryCategory) => {
+    setDirectoryCategory(category);
+    setShopFilter("Any");
+    setSelectedPlace(directory[category][0] ?? null);
+  };
+
+  const selectShopFilter = (filterValue: "Any" | "Halal Shops") => {
+    setShopFilter(filterValue);
+    const nextPlaces =
+      filterValue === "Halal Shops"
+        ? directory.shops.filter((place) => place.subcategory === "Halal")
+        : directory.shops;
+    setSelectedPlace(nextPlaces[0] ?? null);
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="bg-white text-[11px] text-slate-600">
@@ -201,6 +290,13 @@ export default function Home() {
           <a href="https://dkv.hu" target="_blank" rel="noreferrer" className="hover:text-[#154734]">
             DKV Timetables
           </a>
+          <button
+            type="button"
+            onClick={() => setFeedbackOpen(true)}
+            className="h-full px-2 font-bold text-[#154734] hover:underline"
+          >
+            Feedback
+          </button>
           <button
             type="button"
             onClick={() => textareaRef.current?.focus()}
@@ -529,6 +625,210 @@ export default function Home() {
           </aside>
         </div>
       </main>
+
+      <section className="border-y border-slate-200 bg-white py-10" id="explore-debrecen">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div>
+            <p className="text-[11px] font-black tracking-[0.16em] text-[#154734]">
+              EXPLORE DEBRECEN & CAMPUSES
+            </p>
+            <div className="mt-2 h-1 w-12 bg-[#F2B705]" />
+          </div>
+
+          <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-5">
+            {[
+              { key: "shops" as const, label: "Shops", icon: ShoppingBag },
+              { key: "restaurants" as const, label: "Restaurants", icon: Utensils },
+              { key: "hotels" as const, label: "Hotels", icon: Hotel },
+              { key: "mosque_and_worship" as const, label: "Mosque & Monks", icon: Landmark },
+              { key: "university_campuses" as const, label: "University Campuses", icon: GraduationCap },
+            ].map((category) => {
+              const Icon = category.icon;
+              return (
+                <button
+                  key={category.key}
+                  type="button"
+                  onClick={() => selectDirectoryCategory(category.key)}
+                  className={`flex items-center justify-center gap-2 border px-3 py-3 text-xs font-bold transition ${
+                    directoryCategory === category.key
+                      ? "border-[#F2B705] bg-[#154734] text-white"
+                      : "border-slate-200 bg-slate-50 text-slate-600 hover:border-[#154734]"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {category.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {directoryCategory === "shops" && (
+            <div className="mt-3 flex gap-2">
+              {(["Any", "Halal Shops"] as const).map((filterValue) => (
+                <button
+                  key={filterValue}
+                  type="button"
+                  onClick={() => selectShopFilter(filterValue)}
+                  className={`rounded-full border px-3 py-1.5 text-xs font-bold ${
+                    shopFilter === filterValue
+                      ? "border-[#F2B705] bg-[#154734] text-white"
+                      : "border-slate-200 bg-white text-slate-600"
+                  }`}
+                >
+                  {filterValue}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-5 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="max-h-[560px] space-y-3 overflow-y-auto pr-1">
+              {directoryPlaces.map((place) => (
+                <article
+                  key={`${place.name}-${place.address}`}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSelectedPlace(place)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelectedPlace(place);
+                    }
+                  }}
+                  className={`cursor-pointer border p-4 transition ${
+                    selectedPlace?.name === place.name
+                      ? "border-[#F2B705] bg-[#154734]/[0.03]"
+                      : "border-slate-200 bg-white hover:border-[#154734]"
+                  }`}
+                >
+                  <h3 className="text-sm font-black text-[#154734]">{place.name}</h3>
+                  <p className="mt-1 text-xs font-bold text-slate-500">{place.address}</p>
+                  <p className="mt-2 text-xs leading-5 text-slate-600">{place.description}</p>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.mapsQuery)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(event) => event.stopPropagation()}
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-black text-[#154734] hover:underline"
+                  >
+                    Open in Google Maps
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </article>
+              ))}
+            </div>
+
+            <div className="min-h-[420px] overflow-hidden border-2 border-slate-200 bg-slate-100 lg:min-h-[560px]">
+              {selectedPlace ? (
+                <iframe
+                  title={`Google Maps preview for ${selectedPlace.name}`}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedPlace.mapsQuery)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                  className="h-full min-h-[420px] w-full border-0 lg:min-h-[556px]"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              ) : (
+                <div className="grid h-full min-h-[420px] place-items-center text-sm text-slate-500">
+                  Select a place to view it on the map.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <button
+        type="button"
+        onClick={() => setFeedbackOpen(true)}
+        className="fixed right-0 top-1/2 z-40 -translate-y-1/2 rounded-l-lg bg-[#F2B705] px-2 py-4 text-[11px] font-black tracking-[0.12em] text-[#154734] shadow-lg [writing-mode:vertical-rl]"
+      >
+        Feedback
+      </button>
+
+      {feedbackOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="feedback-title"
+          className="fixed inset-0 z-50 grid place-items-center bg-slate-950/45 p-4"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setFeedbackOpen(false);
+          }}
+        >
+          <div className="w-full max-w-md border-t-4 border-[#F2B705] bg-white p-6 shadow-2xl">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-[10px] font-black tracking-[0.16em] text-[#154734]">
+                  FRESHER HELP
+                </p>
+                <h2 id="feedback-title" className="mt-1 text-lg font-black text-slate-900">
+                  Send Feedback
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFeedbackOpen(false)}
+                aria-label="Close feedback modal"
+                className="grid h-8 w-8 place-items-center text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {feedbackStatus && (
+              <div
+                className={`mt-4 border px-3 py-2 text-xs font-bold ${
+                  feedbackStatus.startsWith("Feedback sent")
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    : "border-amber-200 bg-amber-50 text-amber-800"
+                }`}
+              >
+                {feedbackStatus}
+              </div>
+            )}
+
+            <label className="mt-4 block text-xs font-bold text-slate-700">
+              Your feedback
+              <textarea
+                rows={5}
+                value={feedbackMessage}
+                onChange={(event) => setFeedbackMessage(event.target.value)}
+                placeholder="Tell us how Fresher Help can improve..."
+                className="mt-2 w-full resize-none border-2 border-slate-200 px-3 py-2 text-sm font-normal text-slate-800 outline-none focus:border-[#F2B705]"
+              />
+            </label>
+
+            <label className="mt-3 block text-xs font-bold text-slate-700">
+              Email (optional)
+              <input
+                type="email"
+                value={feedbackEmail}
+                onChange={(event) => setFeedbackEmail(event.target.value)}
+                placeholder="you@example.com"
+                className="mt-2 h-11 w-full border-2 border-slate-200 px-3 text-sm font-normal text-slate-800 outline-none focus:border-[#F2B705]"
+              />
+            </label>
+
+            <button
+              type="button"
+              onClick={() => void submitFeedback()}
+              disabled={feedbackSending}
+              className="mt-4 flex h-11 w-full items-center justify-center gap-2 bg-[#154734] text-xs font-black tracking-[0.12em] text-white disabled:opacity-60"
+            >
+              <MessageSquare className="h-4 w-4 text-[#F2B705]" />
+              {feedbackSending ? "SENDING..." : "Send Feedback"}
+            </button>
+
+            <a
+              href="mailto:fresher.help.debrecen@gmail.com"
+              className="mt-3 flex items-center justify-center gap-2 text-xs font-bold text-[#154734] hover:underline"
+            >
+              Open in Email App (mailto:fresher.help.debrecen@gmail.com)
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        </div>
+      )}
 
       <footer className="mt-10 bg-[#154734] text-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-3">

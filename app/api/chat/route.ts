@@ -4,37 +4,21 @@ import fs from "fs";
 import path from "path";
 
 function cleanPlainText(text: string): string {
-  const withoutBreaks = text
+  return text
     .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, "");
-
-  const lines = withoutBreaks
-    .replace(/\*\*\*/g, "")
-    .replace(/\*\*/g, "")
-    .replace(/###\s*/g, "")
-    .replace(/#{1,6}\s*/g, "")
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-
-  const cleaned: string[] = [];
-  for (const line of lines) {
-    if (/^\|\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?$/.test(line)) continue;
-
-    if (/^\|.*\|$/.test(line)) {
-      const cells = line
-        .slice(1, -1)
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/__(.*?)__/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^\|[-:\s|]+\|$/gm, "")
+    .replace(/^\|\s*(.*?)\s*\|$/gm, (_, row: string) =>
+      row
         .split("|")
         .map((cell) => cell.trim())
-        .filter(Boolean);
-      if (cells.length > 0) cleaned.push(cells.join(" — "));
-      continue;
-    }
-
-    cleaned.push(line.replace(/\*/g, "").trim());
-  }
-
-  return cleaned.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+        .filter(Boolean)
+        .join(" — ")
+    )
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 export async function POST(req: Request) {
@@ -50,12 +34,16 @@ export async function POST(req: Request) {
     const body = await req.json();
     const userMessage: string = body.message || "";
 
-    let knowledgeBase = "{}";
+    let compactKnowledge = "University of Debrecen & DKV transit assistant.";
     try {
       const filePath = path.join(process.cwd(), "data", "debrecen.json");
-      knowledgeBase = fs.readFileSync(filePath, "utf-8");
+      const parsedJson = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      // Katta hajmli directory ro'yxatini AI promptidan chiqarib tashlaymiz (413 xatosini oldini olish uchun)
+      const { directory, ...coreData } = parsedJson;
+      void directory;
+      compactKnowledge = JSON.stringify(coreData).slice(0, 6000);
     } catch {
-      knowledgeBase = "University of Debrecen & DKV transit assistant.";
+      // Fallback
     }
 
     const client = new OpenAI({
@@ -65,7 +53,7 @@ export async function POST(req: Request) {
       maxRetries: 1,
     });
 
-    // Akkauntdagi faol modellarni avtomatik aniqlash
+    // 8000 TPM cheklovi bor 120b modeldan qochib, tezkor modelni tanlaymiz
     let selectedModel = "llama-3.1-8b-instant";
     try {
       const modelsPage = await client.models.list();
@@ -73,19 +61,18 @@ export async function POST(req: Request) {
         .map((m) => m.id)
         .filter(
           (id) =>
-            !/whisper|tts|guard|orpheus|playai|embed/i.test(id)
+            !/whisper|tts|guard|orpheus|playai|embed|120b|compound/i.test(id)
         );
 
       const preferred =
-        chatModels.find((id) => /70b|120b|32b/i.test(id)) ||
-        chatModels.find((id) => /llama|qwen|gpt|gemma/i.test(id)) ||
+        chatModels.find((id) => /llama-3\.1-8b|llama-4|qwen|gemma/i.test(id)) ||
         chatModels[0];
 
       if (preferred) {
         selectedModel = preferred;
       }
     } catch {
-      // Fallback model ishlatiladi
+      // Default model
     }
 
     const response = await client.chat.completions.create({
@@ -94,14 +81,15 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: `You are "Fresher Help", a friendly and accurate AI campus assistant for University of Debrecen students.
-Use this local Debrecen knowledge base for accurate facts:
-${knowledgeBase}
+          content: `You are "Fresher Help", a friendly AI campus assistant for University of Debrecen students.
+Use this local Debrecen knowledge base:
+${compactKnowledge}
 
-Rules:
-1. When the user pastes a Hungarian email/letter, asks for a document checklist, or asks for an action plan, ALWAYS call the "add_tasks" tool to extract concrete actionable tasks AND provide a clear English translation/explanation in "reply_message".
-2. For general questions (like DKV tram/bus routes), answer clearly and concisely.
-3. Output plain text only. NEVER use Markdown bold (**), asterisks (*), Markdown tables (|---|), hashtags (#), or HTML tags like <br>. Use clean numbered lines (1., 2., 3.) or bullet points (•) separated by newlines.`,
+CRITICAL FORMATTING RULE:
+Output plain text only. NEVER use Markdown bold (**), asterisks (*), Markdown tables (|---|), hashtags (#), or HTML tags like <br>. Use clean numbered lines (1., 2., 3.) or bullet points (•).
+
+TOOL USE RULE:
+Whenever the user pastes a Hungarian email/letter, asks for a document checklist, or mentions an appointment/class/deadline with a specific day or time, ALWAYS call the "add_tasks" function to add actionable steps to their Action Plan AND provide a clear English explanation in "reply_message".`,
         },
         {
           role: "user",
@@ -114,14 +102,14 @@ Rules:
           function: {
             name: "add_tasks",
             description:
-              "Create actionable student tasks/checklists and provide the full explanation message.",
+              "Create actionable student tasks/checklists/reminders and provide the full plain-text explanation.",
             parameters: {
               type: "object",
               properties: {
                 reply_message: {
                   type: "string",
                   description:
-                    "Clear, helpful English translation and explanation for the student.",
+                    "Clean plain-text English translation, route steps, or explanation without any Markdown symbols.",
                 },
                 tasks: {
                   type: "array",
@@ -153,19 +141,18 @@ Rules:
     if (toolCall && "function" in toolCall) {
       const parsed = JSON.parse(toolCall.function.arguments);
       return NextResponse.json({
-        reply:
-          cleanPlainText(
-            parsed.reply_message ||
-              choice?.content ||
-              "Tasks added to your Live Student Action Plan!",
-          ),
+        reply: cleanPlainText(
+          parsed.reply_message ||
+            choice?.content ||
+            "Tasks added to your Action Plan!"
+        ),
         tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
       });
     }
 
     return NextResponse.json({
       reply: cleanPlainText(
-        choice?.content || "How can I help you in Debrecen today?",
+        choice?.content || "How can I help you in Debrecen today?"
       ),
       tasks: [],
     });
