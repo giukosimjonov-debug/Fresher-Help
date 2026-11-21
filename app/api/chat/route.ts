@@ -1,226 +1,139 @@
-import fs from "node:fs/promises";
-import path from "node:path";
+import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import type {
-  ChatCompletionMessageParam,
-  ChatCompletionTool,
-} from "openai/resources/chat/completions";
+import fs from "fs";
+import path from "path";
 
-type TaskCategory = "Admin" | "Transport" | "Academic";
-
-interface ExtractedTask {
-  title: string;
-  deadline: string;
-  category: TaskCategory;
-}
-
-interface ChatRequest {
-  message?: string;
-  messages?: Array<{
-    role?: string;
-    content?: string;
-  }>;
-}
-
-const addTasksTool: ChatCompletionTool = {
-  type: "function",
-  function: {
-    name: "add_tasks",
-    description:
-      "Extract concrete, actionable tasks from a Hungarian official email, document checklist, or action-plan request.",
-    parameters: {
-      type: "object",
-      properties: {
-        tasks: {
-          type: "array",
-          description: "Concrete next actions for the student.",
-          items: {
-            type: "object",
-            properties: {
-              title: {
-                type: "string",
-                description: "A short, specific action the student should take.",
-              },
-              deadline: {
-                type: "string",
-                description:
-                  "The relevant deadline, if stated; otherwise a useful reminder such as 'ASAP' or 'Before expiry'.",
-              },
-              category: {
-                type: "string",
-                enum: ["Admin", "Transport", "Academic"],
-              },
-            },
-            required: ["title", "deadline", "category"],
-            additionalProperties: false,
-          },
-        },
-      },
-      required: ["tasks"],
-      additionalProperties: false,
-    },
-  },
-};
-
-function isTaskCategory(value: unknown): value is TaskCategory {
-  return value === "Admin" || value === "Transport" || value === "Academic";
-}
-
-function normalizeTasks(value: unknown): ExtractedTask[] {
-  if (!value || typeof value !== "object") return [];
-
-  const tasks = (value as { tasks?: unknown }).tasks;
-  if (!Array.isArray(tasks)) return [];
-
-  return tasks.flatMap((task) => {
-    if (!task || typeof task !== "object") return [];
-
-    const candidate = task as Record<string, unknown>;
-    if (
-      typeof candidate.title !== "string" ||
-      typeof candidate.deadline !== "string" ||
-      !isTaskCategory(candidate.category)
-    ) {
-      return [];
-    }
-
-    return [
-      {
-        title: candidate.title.trim(),
-        deadline: candidate.deadline.trim(),
-        category: candidate.category,
-      },
-    ].filter((item) => item.title.length > 0);
-  });
-}
-
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const body = (await request.json()) as ChatRequest;
-
-    const conversation: ChatCompletionMessageParam[] =
-      body.messages?.length
-        ? body.messages
-            .filter(
-              (item) =>
-                (item.role === "user" || item.role === "assistant") &&
-                typeof item.content === "string",
-            )
-            .map((item) => ({
-              role: item.role as "user" | "assistant",
-              content: item.content as string,
-            }))
-        : typeof body.message === "string"
-          ? [{ role: "user", content: body.message }]
-          : [];
-
-    if (conversation.length === 0) {
-      return Response.json(
-        { reply: "Please enter a question or paste an official email.", tasks: [] },
-        { status: 400 },
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "GROQ_API_KEY topilmadi. .env.local faylini tekshiring." },
+        { status: 500 }
       );
     }
 
-    if (!process.env.GITHUB_TOKEN) {
-      return Response.json(
-        {
-          reply: "Fresher Help is not configured yet: GITHUB_TOKEN is missing.",
-          tasks: [],
-        },
-        { status: 500 },
-      );
-    }
+    const body = await req.json();
+    const userMessage: string = body.message || "";
 
-    const localKnowledge = await fs.readFile(
-      path.join(process.cwd(), "data", "debrecen.json"),
-      "utf8",
-    );
+    let knowledgeBase = "{}";
+    try {
+      const filePath = path.join(process.cwd(), "data", "debrecen.json");
+      knowledgeBase = fs.readFileSync(filePath, "utf-8");
+    } catch {
+      knowledgeBase = "University of Debrecen & DKV transit assistant.";
+    }
 
     const client = new OpenAI({
-      baseURL: "https://models.inference.ai.azure.com",
-      apiKey: process.env.GITHUB_TOKEN,
+      baseURL: "https://api.groq.com/openai/v1",
+      apiKey,
+      timeout: 12000,
+      maxRetries: 1,
     });
 
-    const systemPrompt = `You are Fresher Help, a friendly and accurate local expert assistant for new and international students at the University of Debrecen.
+    // Akkauntdagi faol modellarni avtomatik aniqlash
+    let selectedModel = "llama-3.1-8b-instant";
+    try {
+      const modelsPage = await client.models.list();
+      const chatModels = modelsPage.data
+        .map((m) => m.id)
+        .filter(
+          (id) =>
+            !/whisper|tts|guard|orpheus|playai|embed/i.test(id)
+        );
 
-Use the following local knowledge as your factual source for University of Debrecen and Debrecen information:
-${localKnowledge}
+      const preferred =
+        chatModels.find((id) => /70b|120b|32b/i.test(id)) ||
+        chatModels.find((id) => /llama|qwen|gpt|gemma/i.test(id)) ||
+        chatModels[0];
+
+      if (preferred) {
+        selectedModel = preferred;
+      }
+    } catch {
+      // Fallback model ishlatiladi
+    }
+
+    const response = await client.chat.completions.create({
+      model: selectedModel,
+      temperature: 0.3,
+      messages: [
+        {
+          role: "system",
+          content: `You are "Fresher Help", a friendly and accurate AI campus assistant for University of Debrecen students.
+Use this local Debrecen knowledge base for accurate facts:
+${knowledgeBase}
 
 Rules:
-- Give clear, practical, helpful explanations.
-- Distinguish verified facts from items the student should confirm on an official current source.
-- For Hungarian official emails, document checklist requests, or action-plan requests, you MUST call the add_tasks tool to extract concrete actionable steps, even if the email or checklist is incomplete.
-- After calling add_tasks, explain the next steps clearly and mention deadlines or missing documents accurately.
-- Use deadlines from the source when available. If no reliable deadline is given, use "No specific deadline provided" or "Before expiry".
-- Return only the final natural-language reply as the chat completion; do not include JSON in your reply.`;
-
-    const messages: ChatCompletionMessageParam[] = [
-      { role: "system", content: systemPrompt },
-      ...conversation,
-    ];
-
-    const firstCompletion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages,
-      tools: [addTasksTool],
+1. When the user pastes a Hungarian email/letter, asks for a document checklist, or asks for an action plan, ALWAYS call the "add_tasks" tool to extract concrete actionable tasks AND provide a clear English translation/explanation in "reply_message".
+2. For general questions (like DKV tram/bus routes), answer clearly and concisely.`,
+        },
+        {
+          role: "user",
+          content: userMessage,
+        },
+      ],
+      tools: [
+        {
+          type: "function",
+          function: {
+            name: "add_tasks",
+            description:
+              "Create actionable student tasks/checklists and provide the full explanation message.",
+            parameters: {
+              type: "object",
+              properties: {
+                reply_message: {
+                  type: "string",
+                  description:
+                    "Clear, helpful English translation and explanation for the student.",
+                },
+                tasks: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      title: { type: "string" },
+                      deadline: { type: "string" },
+                      category: {
+                        type: "string",
+                        enum: ["Admin", "Transport", "Academic"],
+                      },
+                    },
+                    required: ["title", "deadline", "category"],
+                  },
+                },
+              },
+              required: ["reply_message", "tasks"],
+            },
+          },
+        },
+      ],
       tool_choice: "auto",
-      temperature: 0.2,
     });
 
-    const assistantMessage = firstCompletion.choices[0]?.message;
-    let tasks: ExtractedTask[] = [];
-    let reply = assistantMessage?.content?.trim() ?? "";
+    const choice = response.choices[0]?.message;
+    const toolCall = choice?.tool_calls?.[0];
 
-    if (assistantMessage?.tool_calls?.length) {
-      messages.push(assistantMessage);
-
-      for (const toolCall of assistantMessage.tool_calls) {
-        if (toolCall.type !== "function" || toolCall.function.name !== "add_tasks") {
-          continue;
-        }
-
-        let parsedArguments: unknown;
-        try {
-          parsedArguments = JSON.parse(toolCall.function.arguments);
-        } catch {
-          parsedArguments = null;
-        }
-
-        const extractedTasks = normalizeTasks(parsedArguments);
-        tasks = tasks.concat(extractedTasks);
-
-        messages.push({
-          role: "tool",
-          tool_call_id: toolCall.id,
-          content: JSON.stringify({ tasks: extractedTasks }),
-        });
-      }
-
-      if (tasks.length > 0 || assistantMessage.tool_calls.length > 0) {
-        const finalCompletion = await client.chat.completions.create({
-          model: "gpt-4o-mini",
-          messages,
-          temperature: 0.2,
-        });
-
-        reply =
-          finalCompletion.choices[0]?.message?.content?.trim() ??
-          "I extracted the requested action items.";
-      }
+    if (toolCall && "function" in toolCall) {
+      const parsed = JSON.parse(toolCall.function.arguments);
+      return NextResponse.json({
+        reply:
+          parsed.reply_message ||
+          choice?.content ||
+          "Tasks added to your Live Student Action Plan!",
+        tasks: Array.isArray(parsed.tasks) ? parsed.tasks : [],
+      });
     }
 
-    if (!reply) {
-      reply = "I could not generate a response. Please try rephrasing your question.";
-    }
-
-    return Response.json({ reply, tasks });
-  } catch (error) {
+    return NextResponse.json({
+      reply: choice?.content || "How can I help you in Debrecen today?",
+      tasks: [],
+    });
+  } catch (err: unknown) {
     const message =
-      error instanceof Error ? error.message : "An unexpected chat error occurred.";
-
-    return Response.json(
-      { reply: `Fresher Help could not complete your request: ${message}`, tasks: [] },
-      { status: 500 },
-    );
+      err instanceof Error ? err.message : "Unknown backend error";
+    console.error("Chat API Error:", err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
