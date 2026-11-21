@@ -15,13 +15,16 @@ import {
   Hotel,
   Languages,
   Landmark,
+  Loader2,
   MapPin,
   MessageSquare,
   Send,
   ShoppingBag,
+  Square,
   Trash2,
   Utensils,
   User,
+  Volume2,
   X,
 } from "lucide-react";
 import debrecenData from "@/data/debrecen.json";
@@ -109,6 +112,13 @@ export default function Home() {
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const [audioStates, setAudioStates] = useState<
+    Record<number, "loading" | "playing">
+  >({});
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const currentObjectUrlRef = useRef<string | null>(null);
+  const browserUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const audioRequestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
@@ -123,6 +133,115 @@ export default function Home() {
     const timeout = window.setTimeout(() => setBanner(null), 4000);
     return () => window.clearTimeout(timeout);
   }, [banner]);
+
+  useEffect(() => {
+    return () => {
+      audioRequestRef.current?.abort();
+      currentAudioRef.current?.pause();
+      if (currentObjectUrlRef.current) {
+        URL.revokeObjectURL(currentObjectUrlRef.current);
+      }
+      window.speechSynthesis?.cancel();
+    };
+  }, []);
+
+  const stopCurrentAudio = () => {
+    audioRequestRef.current?.abort();
+    audioRequestRef.current = null;
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current.currentTime = 0;
+      currentAudioRef.current = null;
+    }
+    if (currentObjectUrlRef.current) {
+      URL.revokeObjectURL(currentObjectUrlRef.current);
+      currentObjectUrlRef.current = null;
+    }
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    browserUtteranceRef.current = null;
+    setAudioStates({});
+  };
+
+  const playBrowserSpeech = (messageIndex: number, text: string) => {
+    if (!window.speechSynthesis) return;
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    browserUtteranceRef.current = utterance;
+    utterance.onend = () => {
+      setAudioStates((previous) => {
+        const next = { ...previous };
+        delete next[messageIndex];
+        return next;
+      });
+      browserUtteranceRef.current = null;
+    };
+    utterance.onerror = utterance.onend;
+    window.speechSynthesis.speak(utterance);
+    setAudioStates({ [messageIndex]: "playing" });
+  };
+
+  const handleListen = async (messageIndex: number, text: string) => {
+    if (audioStates[messageIndex]) {
+      stopCurrentAudio();
+      return;
+    }
+
+    stopCurrentAudio();
+    setAudioStates({ [messageIndex]: "loading" });
+    const requestController = new AbortController();
+    audioRequestRef.current = requestController;
+
+    try {
+      const response = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+        signal: requestController.signal,
+      });
+
+      if (!response.ok) throw new Error("ElevenLabs playback unavailable");
+      if (!response.headers.get("content-type")?.includes("audio/mpeg")) {
+        throw new Error("Invalid audio response");
+      }
+
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const audio = new Audio(objectUrl);
+      currentObjectUrlRef.current = objectUrl;
+      currentAudioRef.current = audio;
+
+      audio.onended = () => {
+        URL.revokeObjectURL(objectUrl);
+        if (currentObjectUrlRef.current === objectUrl) {
+          currentObjectUrlRef.current = null;
+          currentAudioRef.current = null;
+        }
+        setAudioStates((previous) => {
+          const next = { ...previous };
+          delete next[messageIndex];
+          return next;
+        });
+      };
+      audio.onerror = () => {
+        stopCurrentAudio();
+        playBrowserSpeech(messageIndex, text);
+      };
+
+      await audio.play();
+      setAudioStates({ [messageIndex]: "playing" });
+    } catch (error) {
+      if (
+        error instanceof DOMException &&
+        error.name === "AbortError"
+      ) {
+        return;
+      }
+      stopCurrentAudio();
+      playBrowserSpeech(messageIndex, text);
+    }
+  };
 
   const sendMessage = async (textToSend?: string) => {
     const content = (textToSend ?? input).trim();
@@ -468,6 +587,30 @@ export default function Home() {
                       }`}
                     >
                       {message.content}
+                      {message.role === "assistant" && (
+                        <button
+                          type="button"
+                          onClick={() => void handleListen(index, message.content)}
+                          className="mt-3 flex items-center gap-1.5 border border-[#154734]/20 bg-[#F2B705]/15 px-2 py-1 text-[11px] font-black tracking-[0.06em] text-[#154734] transition hover:border-[#F2B705] hover:bg-[#F2B705]/25"
+                        >
+                          {audioStates[index] === "loading" ? (
+                            <>
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              Loading audio...
+                            </>
+                          ) : audioStates[index] === "playing" ? (
+                            <>
+                              <Square className="h-3.5 w-3.5 fill-[#154734]" />
+                              Stop
+                            </>
+                          ) : (
+                            <>
+                              <Volume2 className="h-3.5 w-3.5" />
+                              Listen
+                            </>
+                          )}
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
