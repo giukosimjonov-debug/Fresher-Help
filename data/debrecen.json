@@ -1,0 +1,457 @@
+{
+  "campuses_and_buildings": [
+    {
+      "name": "Main Building",
+      "hungarian_name": "Főépület",
+      "address": "4032 Debrecen, Egyetem tér 1",
+      "functions": [
+        "Humanities",
+        "Science",
+        "Rector's Office"
+      ],
+      "notes": "The central landmark of the university's Nagyerdei/main campus. Tram 1 serves the Egyetem stop nearby."
+    },
+    {
+      "name": "Learning Center",
+      "hungarian_name": "Egyetemi és Nemzeti Könyvtár - Learning Center",
+      "address": "4032 Debrecen, Egyetem sugárút / Nagyerdei körút",
+      "functions": [
+        "24/7 study spaces",
+        "Modern lecture halls",
+        "Library and learning services"
+      ],
+      "notes": "Confirm current opening and access rules before a late-night visit. Use the Egyetem tram stop or nearby Nagyerdei körút stops."
+    },
+    {
+      "name": "Kassai Campus",
+      "address": "4028 Debrecen, Kassai út 26",
+      "functions": [
+        "Faculty of Informatics (IK)",
+        "Faculty of Law",
+        "Faculty of Economics and Business",
+        "TEOKJ",
+        "Faculty of Health Sciences"
+      ],
+      "notes": "A major eastern campus served by trolleybus 3/3A and bus 22/24; identify the exact faculty entrance before arrival."
+    },
+    {
+      "name": "Böszörményi Campus",
+      "address": "4032 Debrecen, Böszörményi út 138",
+      "functions": [
+        "Faculty of Agriculture, Food and Environmental Sciences",
+        "Agricultural and food-science teaching and research"
+      ],
+      "notes": "Allow extra walking time from the nearest bus stop and check whether a scheduled shuttle or faculty timetable applies."
+    },
+    {
+      "name": "Clinical Center / Klinikák",
+      "hungarian_name": "Klinikai Központ, Nagyerdei Campus",
+      "address": "4032 Debrecen, Nagyerdei körút 98",
+      "functions": [
+        "Faculty of Medicine",
+        "Faculty of Dentistry",
+        "Faculty of Pharmacy",
+        "University clinical services"
+      ],
+      "notes": "For a medical emergency, use 112 or the campus emergency department. Tram 1 stops at Klinikai Központ Nagyerdei Campus."
+    },
+    {
+      "name": "Kenézy Life Sciences Library",
+      "hungarian_name": "Kenézy Élettudományi Könyvtár",
+      "address": "4032 Debrecen, Egyetem tér 1",
+      "functions": [
+        "Life-sciences collections",
+        "Main university library service",
+        "Study and reference services"
+      ],
+      "notes": "Its official name may appear as Life Sciences Library (LSL) or Kenézy Life Sciences Library (KÉK); verify room and opening hours in the library calendar."
+    },
+    {
+      "name": "International Office & Student Administration Center",
+      "hungarian_name": "HSZI",
+      "address": "4032 Debrecen, Nagyerdei körút",
+      "functions": [
+        "International student administration",
+        "Student status and study certificates",
+        "International mobility and advising",
+        "Administrative referrals"
+      ],
+      "notes": "Confirm the exact HSZI window, office number, and appointment requirement on the University of Debrecen official contacts page before visiting."
+    }
+  ],
+  "dkv_transit_and_routes": {
+    "tram_1": {
+      "route": "Nagyállomás <-> Egyetem",
+      "stops": [
+        "Nagyállomás, villamos",
+        "Vásáry István utca",
+        "Szent Anna utca",
+        "Városháza",
+        "Kossuth tér",
+        "Kálvin tér",
+        "Eötvös utca",
+        "Nagyerdei körút",
+        "Aquaticum",
+        "Klinikai Központ Nagyerdei Campus",
+        "Egyetem"
+      ],
+      "key_usage": [
+        "Use between the railway station and Main Campus.",
+        "Use Klinikai Központ Nagyerdei Campus for the Clinical Center.",
+        "Use Egyetem for the central university campus and Learning Center."
+      ]
+    },
+    "tram_2": {
+      "route": "Nagyállomás <-> Doberdó utca",
+      "stops": [
+        "Nagyállomás, villamos",
+        "Vásáry István utca",
+        "Szent Anna utca",
+        "Városháza",
+        "Kossuth tér",
+        "Kálvin tér",
+        "Kölcsey Központ (Hunyadi János utca)",
+        "Csemete utca",
+        "Dózsa György utca",
+        "Nádor utca",
+        "Doberdó utca",
+        "Árpád Vezér Általános Iskola",
+        "Görgey utca"
+      ],
+      "key_usage": [
+        "Useful for Nagyállomás, the city center, Kálvin tér, and the Doberdó/Görgey area.",
+        "Check the live DKV timetable because service and stop sequences can differ with diversions."
+      ]
+    },
+    "key_lines": [
+      {
+        "line": "Bus 15",
+        "use": "Connects Doberdó utca and Széna tér and reaches Böszörményi-campus-area corridors; check the live stop sequence."
+      },
+      {
+        "line": "Bus 22",
+        "use": "Useful for Kassai út and the Kassai Campus; can be combined with Tram 1 for east/central-campus journeys."
+      },
+      {
+        "line": "Bus 24",
+        "use": "Useful for Kassai út and the Kassai Campus; confirm the exact 24 or 24Y variant."
+      },
+      {
+        "line": "Bus 41",
+        "use": "Connects Vincellér utca, Tócóskert tér, and the central bus station with Faraktár utca and Komáromi Csipkés György tér."
+      },
+      {
+        "line": "Bus 43",
+        "use": "Check the current DKV schedule; it is a useful central-east/north-east connection depending on timetable and route variant."
+      },
+      {
+        "line": "Trolleybus 3",
+        "use": "Direct east-west trolley connection via Segner tér and Kassai út; a practical Kassai Campus option."
+      },
+      {
+        "line": "Trolleybus 3A",
+        "use": "Short or variant route between Segner tér and Kassai út, with stops including the bus station, Csapó utca, Árpád tér, and Kassai út."
+      },
+      {
+        "line": "Airport 1",
+        "use": "Airport Debrecen <-> Nagyállomás, via Debreceni Erőmű, Leiningen utca, Bulgár utca, Hun utca, and Repülőtéri út."
+      },
+      {
+        "line": "Airport 2",
+        "use": "Check the live DKV route page for its current airport/central Debrecen connections and timetable."
+      }
+    ],
+    "campus_to_campus_routes": [
+      {
+        "from": "Kassai Campus",
+        "to": "Learning Center / Main Campus",
+        "recommended": "Trolleybus 3/3A toward the center, then Tram 1 toward Egyetem",
+        "alternatives": [
+          "Bus 22/24 toward the center, transfer to Tram 1",
+          "Walk to a suitable stop and use the DKV journey planner"
+        ],
+        "estimated_minutes": "About 20-30 minutes door to stop plus transfer and walking time"
+      },
+      {
+        "from": "Nagyállomás Train Station",
+        "to": "Main Campus",
+        "recommended": "Tram 1 directly toward Egyetem",
+        "estimated_minutes": "About 18-20 minutes from vehicle departure to the campus stop; add waiting and walking time"
+      },
+      {
+        "from": "Nagyállomás Train Station",
+        "to": "Kassai Campus",
+        "recommended": "Trolleybus 3/3A or Bus 22/24 with the stop matching Kassai út 26",
+        "estimated_minutes": "About 20-30 minutes"
+      },
+      {
+        "from": "Main Building",
+        "to": "Clinical Center / Klinikák",
+        "recommended": "Walk or take Tram 1 one stop/short section along Nagyerdei körút",
+        "estimated_minutes": "About 10-15 minutes walking or less by tram, depending on the stop"
+      },
+      {
+        "from": "Main Campus",
+        "to": "Böszörményi Campus",
+        "recommended": "Use Bus 15/22/24/34 with a stop at or near Böszörményi út 138",
+        "estimated_minutes": "About 25-35 minutes including walking"
+      }
+    ],
+    "student_monthly_pass": {
+      "name": "tanuló bérlet",
+      "eligibility": [
+        "Usually requires valid Hungarian or accepted student identification and proof of active student status.",
+        "Confirm current eligibility, fare zones, and discount categories with DKV before purchase."
+      ],
+      "purchase_and_use": [
+        "Buy at an authorized DKV point or through the official DKV/mobile ticket service if the student pass is available for your status.",
+        "Use the MÁV app only for railway journeys; use DKV's official app or ticket channels for Debrecen local transport.",
+        "Select the correct validity month and keep the pass or app ticket available for inspection.",
+        "A student monthly pass is generally for the calendar month and may have an extended validity-to-the-5th rule according to DKV ticket conditions; verify the exact dates at purchase."
+      ],
+      "validation": [
+        "Paper single tickets must be time-validated immediately after boarding on the tram, bus, or trolleybus.",
+        "Activate or validate mobile tickets exactly according to the app's shown rules before the journey.",
+        "A pass or digital ticket must remain readable and available for an inspector.",
+        "Carry accepted student ID and proof of eligibility together with a student pass.",
+        "Do not photograph or reuse someone else's pass. Keep the device charged and online where activation requires it."
+      ],
+      "avoid_fines": [
+        "Never board with an expired, wrong-fare, or unvalidated ticket.",
+        "Validate a paper ticket in the yellow/red machine for each required trip.",
+        "Do not assume a tram or bus platform ticket validates the vehicle journey.",
+        "If fined, read the notice for the protest deadline and official payment or appeal instructions.",
+        "Check diversions and route changes in the DKV app before departure."
+      ]
+    },
+    "apps": {
+      "dkv_app": "Use official DKV ticketing and timetable services for Debrecen trams, buses, trolleybuses, airport buses, route planning, and live schedules.",
+      "mav_app": "Use MÁV for Hungarian rail services such as trains to/from Debrecen. A MÁV passenger ticket or student rail fare does not replace a DKV local transport ticket.",
+      "tip": "Save both routes and tickets before entering weak-network areas, and verify transfer stops rather than relying only on approximate walking estimates."
+    }
+  },
+  "hungarian_admin_glossary": [
+    {
+      "term": "hiánypótlás",
+      "meaning": "Missing-document request",
+      "action": "Do not ignore it. Read the deadline and list of missing items, upload or deliver exactly what is requested, and retain proof of submission."
+    },
+    {
+      "term": "határidő",
+      "meaning": "Deadline",
+      "action": "Treat the stated date and time as the final submission or appearance deadline. Account for portal, appointment, and postal delays."
+    },
+    {
+      "term": "tartózkodási engedély",
+      "meaning": "Residence permit",
+      "action": "Verify whether the email concerns application, decision, extension, collection, or expiry. Follow the portal instructions and keep copies of permits and receipts."
+    },
+    {
+      "term": "hallgatói jogviszony igazolás",
+      "meaning": "Active student status certificate",
+      "action": "Obtain the official certificate from Neptun or the university administration. Check its issue date and validity; many applications require a current certificate."
+    },
+    {
+      "term": "befizetési kötelezettség",
+      "meaning": "Payment obligation",
+      "action": "Open the Neptun Finances tab or official payment request, verify the amount and deadline, pay through the accepted method, and save the receipt."
+    },
+    {
+      "term": "vizsgajelentkezés",
+      "meaning": "Exam registration",
+      "action": "Register through Neptun before the stated deadline, confirm the exam venue and cancellation rules, and deregister if you cannot attend where cancellation is allowed."
+    },
+    {
+      "term": "lakcímbejelentő",
+      "meaning": "Proof or registration of a Hungarian address",
+      "action": "Prepare the official address-registration document or address card. Check whether the landlord or accommodation owner must also provide a statement."
+    },
+    {
+      "term": "fellebbezés",
+      "meaning": "Appeal",
+      "action": "Read the decision for the appeal authority and short statutory deadline. Submit the formal appeal with grounds and supporting documents; do not assume a missing appeal is acceptable."
+    },
+    {
+      "term": "jogviszony",
+      "meaning": "Student status or legal relationship",
+      "action": "Check whether the university's active, interrupted, or finished status is listed correctly in Neptun and resolve discrepancies promptly."
+    },
+    {
+      "term": "igazolás",
+      "meaning": "Certificate or verification",
+      "action": "Ask whether an original, certified copy, digital copy, or stamped university form is required."
+    }
+  ],
+  "admin_checklists": {
+    "residence_permit_extension": {
+      "authority": "National Directorate-General for Aliens Policing (OIF) through Enter Hungary",
+      "rules": [
+        "Do not wait until the permit expires. For an initial application or extension, follow the OIF/Enter Hungary deadline instructions and generally file or start the extension process at least 30 days before expiry.",
+        "Use the Enter Hungary portal to identify the correct purpose, upload documents, book or complete the appointment, and track the application.",
+        "Reply promptly to a hiánypótlás request and follow the listed deadline."
+      ],
+      "documents": [
+        "Valid passport and, if applicable, copies of the current residence permit.",
+        "Active student status certificate (hallgatói jogviszony igazolás), normally current and issued close to the application date.",
+        "Accommodation contract and/or lakcímbejelentő or proof of registered Hungarian address.",
+        "Proof of sufficient funds: bank statements or the Stipendium Hungaricum scholarship award/letter and other official sponsorship evidence.",
+        "Health-insurance or private-insurance proof as applicable.",
+        "Completed application forms, photos, and fee or application receipts when required."
+      ],
+      "steps": [
+        "Confirm the permit expiry date and check it against the 30-day recommended filing window.",
+        "Log in to Enter Hungary and select the residence-permit extension for studies.",
+        "Prepare clear copies of the passport, permit, address proof, finances, insurance, and current student certificate.",
+        "Complete and submit the application and pay or arrange fees as instructed.",
+        "Record any appointment and attend with originals plus copies.",
+        "Save the receipt and monitor further communications for biographic data, collection, or missing-document requests."
+      ]
+    },
+    "taj_card_application": {
+      "authority": "NEAK / National Health Insurance Fund of Hungary",
+      "eligibility_note": "Coverage depends on the student's status, residence permit, EEA/EU rules, scholarship conditions, insurance agreement, and employment. Confirm the applicable category before applying.",
+      "documents": [
+        "Valid passport or accepted identity document.",
+        "Address card or official proof of address/lakcím.",
+        "Residence permit card and a copy of both sides for third-country students.",
+        "Student status certificate issued by the university and current within the application period.",
+        "Stipendium Hungaricum award letter or other scholarship proof if applicable.",
+        "Completed NEAK TAJ application form, as required."
+      ],
+      "steps": [
+        "Determine whether you need to submit a new TAJ application, renewal, or employer-based application.",
+        "Download or obtain the current NEAK form and gather originals plus copies.",
+        "Where required, arrange a health-insurance contribution agreement and confirm the exact contribution amount.",
+        "Submit in person at the NEAK/appropriate customer office and receive the submission acknowledgment.",
+        "Wait for the TAJ number/card process to complete; keep the confirmation and follow collection or postal instructions.",
+        "Verify the TAJ number is active before relying on public-health coverage and renew or update it after residence-permit changes."
+      ],
+      "important": "Rules and required forms can change. Check University of Debrecen's international-administration and NEAK pages immediately before applying."
+    },
+    "tax_id_application": {
+      "authority": "NAV - Nemzeti Adó- és Vámhivatal",
+      "purpose": "Needed for taxable student work, scholarship payments, or tax procedures when NAV has not automatically issued an adóazonosító jel.",
+      "documents": [
+        "Valid passport or identity document.",
+        "Hungarian address card or acceptable proof of address.",
+        "Residence-permit or registration documents where applicable.",
+        "Completed NAV T34 form for a first tax-ID application.",
+        "Scholarship or employer information if requested."
+      ],
+      "steps": [
+        "Ask the employer or scholarship administrator whether you already have a Hungarian tax ID.",
+        "If not, obtain the current NAV T34 form and fill in the Hungarian address and identity details accurately.",
+        "Submit in person at a NAV office or by the currently accepted postal/e-filing method.",
+        "Keep the acknowledgment and any tax-card or interim certificate.",
+        "Give the tax ID to the employer or payer through the required payroll or tax declaration process.",
+        "Update NAV if your address or taxpayer details change."
+      ]
+    },
+    "neptun_semester_start": {
+      "steps": [
+        "Sign in to Neptun and confirm that the displayed academic year, semester, name, training, and faculty are correct.",
+        "Open Administration > My semesters or the corresponding semester-status menu and activate/register for the semester within the official registration period.",
+        "Read the semester's registration, subject, and exam instructions in Messages and official faculty notices.",
+        "Register for required and elective subjects in Subjects and then add the correct course groups or timetables.",
+        "Check timetable overlaps, prerequisites, subject codes, credit totals, and course capacity.",
+        "Register for exams only in the exam calendar, observing the registration/cancellation deadline and cancellation penalties.",
+        "Open the Finances tab and check tuition, dormitory, service, scholarship, and payment obligations.",
+        "Resolve befizetési kötelezettség items and save payment receipts.",
+        "Before the period closes, recheck semester status, registered subjects, course groups, exams, messages, and timetable."
+      ],
+      "exam_rules": [
+        "An exam registration is only valid if Neptun shows the student as registered.",
+        "Cancel within the permitted Neptun window if you cannot attend, where cancellation is allowed.",
+        "The faculty may apply a different cancellation or re-registration deadline; follow the formal course/exam notice.",
+        "A passed exam and an exam penalty or unsuccessful attempt can have different retake rules."
+      ]
+    }
+  },
+  "student_support_and_emergencies": {
+    "emergency_numbers": {
+      "general_emergency": "112",
+      "ambulance_via_general_emergency": "112",
+      "clinical_center_emergency_care": "Use 112 for life-threatening emergencies; the Clinical Center emergency department is at 4032 Debrecen, Nagyerdei körút 98.",
+      "university_campus_security": "Use the campus reception or security desk listed for the specific building for non-emergency incidents. Call 112 for immediate danger. The University of Debrecen's general switchboard is not a substitute for 112.",
+      "pharmacy_on_duty": "Ask for the ügyeletes gyógyszertár. Use a current pharmacy-duty listing or call local directory information before traveling because the on-duty address and hours rotate."
+    },
+    "academic_support": {
+      "stipendium_hungaricum": {
+        "name": "Stipendium Hungaricum Institutional Coordinator",
+        "action": "Contact the coordinator or scholarship office assigned to your faculty for award letters, status changes, enrollment, and scholarship-administration questions."
+      },
+      "mental_health_center": {
+        "name": "University of Debrecen Mental Health and Equal Opportunity Center",
+        "hungarian_name": "Mentálhigiénés és Esélyegyenlőségi Központ",
+        "phone": "+36 52 518 627",
+        "email": "demek@unideb.hu",
+        "action": "Use for psychological counselling and student well-being support; confirm appointment and English-language availability."
+      },
+      "elearning": {
+        "name": "University of Debrecen E-learning / Moodle",
+        "url": "https://elearning.unideb.hu",
+        "action": "Sign in with university credentials to access course materials, assignments, quizzes, announcements, and participation records."
+      },
+      "international_office": {
+        "name": "International Office / HSZI",
+        "action": "Use for active student certificates and international-student administrative guidance; confirm the current window and booking method."
+      }
+    },
+    "sources_and_freshness": {
+      "check_before_relying": [
+        "DKV route, stop, timetable, fare, validation, and airport-bus details",
+        "OIF/Enter Hungary residence-permit documents and deadlines",
+        "NEAK health-insurance eligibility, form, contribution, and office details",
+        "NAV first tax-ID procedures and form version",
+        "University opening hours, HSZI appointments, campus receptions, and pharmacy duty"
+      ],
+      "official_domains": [
+        "dkv.hu",
+        "unideb.hu",
+        "enterhungary.gov.hu",
+        "neak.gov.hu",
+        "nav.gov.hu",
+        "mavcsoport.hu"
+      ]
+    }
+  },
+  "campuses": [
+    {
+      "name": "Main Building",
+      "address": "Egyetem tér 1",
+      "transit": "Tram 1 to Egyetem"
+    },
+    {
+      "name": "Learning Center",
+      "address": "Main Campus",
+      "transit": "Tram 1 to Egyetem or Klinikák"
+    },
+    {
+      "name": "Kassai Campus / Faculty of Informatics",
+      "address": "Kassai út 26",
+      "transit": "Bus 22/24 or trolleybus 3/3A"
+    },
+    {
+      "name": "Böszörményi Campus",
+      "address": "Böszörményi út 138",
+      "transit": "Bus 15/22/24/34"
+    }
+  ],
+  "dkv_transit": {
+    "tram_1": {
+      "route": "Nagyállomás <-> Egyetem"
+    },
+    "tram_2": {
+      "route": "Nagyállomás <-> Doberdó utca"
+    },
+    "student_monthly_pass": {
+      "name": "tanuló bérlet",
+      "instructions": [
+        "Check the current DKV student-pass rules and available fare types on the DKV website or official app.",
+        "Confirm eligibility and prepare valid proof of active student status.",
+        "Purchase for the correct calendar period and validate or activate it as instructed.",
+        "Carry the pass and valid proof of eligibility while traveling."
+      ]
+    }
+  }
+}
